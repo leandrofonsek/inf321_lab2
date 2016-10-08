@@ -7,12 +7,22 @@ import java.net.URL;
 import java.net.URLConnection;
 
 public class ViaCep {
-    
-    public String buscarEndereco(String cep){
+
+    private String url;
+
+    public ViaCep() {
+        url = "http://viacep.com.br/ws/";
+    }
+
+    public ViaCep(String url) {
+        this.url = url;
+    }
+
+    public String buscarEndereco(String cep) {
         String json;
 
         try {
-            URL url = new URL("http://viacep.com.br/ws/"+ cep +"/json");
+            URL url = new URL(this.url + cep + "/json");
             URLConnection urlConnection = url.openConnection();
             InputStream is = urlConnection.getInputStream();
             BufferedReader br = new BufferedReader(new InputStreamReader(is));
@@ -26,7 +36,7 @@ public class ViaCep {
             json = jsonSb.toString();
 
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            return "Servico indisponivel temporariamente";
         }
 
         return json;
