@@ -1,22 +1,16 @@
 package br.unicamp.bookstore.steps;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.get;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlMatching;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.net.URLConnection;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
-import com.github.tomakehurst.wiremock.client.WireMock;
-import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import com.google.gson.Gson;
-import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.*;
 
 import br.unicamp.bookstore.model.Address;
 import br.unicamp.bookstore.service.ViaCep;
@@ -27,25 +21,16 @@ import cucumber.api.java.en.When;
 
 public class BuscarEnderecoSteps {
 
-    WireMockServer wireMockServer; //No-args constructor will start on port 8080, no HTTPS
-    
+    private static final String MOCK_URL = "http://localhost:8080/ws/";
     
     private ViaCep viaCep;
     private String result;
+
     
     @Before
     public void setUp() {
-        viaCep = new ViaCep();
+        viaCep = new ViaCep(MOCK_URL);
         result = null;
-        
-        wireMockServer= new WireMockServer();
-        wireMockServer.start();
-        
-        stubFor(get(urlMatching("/ws/.*"))
-            .willReturn(aResponse()
-                .withHeader("Content-Type", "text/plain")
-                .withBody("Hello world!")));
-        
     }
     
     @Given("^I can consult my address based on a zip code$")
@@ -55,7 +40,37 @@ public class BuscarEnderecoSteps {
     
     @When("^I consult the address for the zip code (\\d{5}-\\d{3})$")
     public void i_consult_the_address_for_the_zip_code(String cep) {
+        WireMockServer wireMockServer = new WireMockServer();
+        wireMockServer.start();
+        wireMockServer.stubFor(get(urlMatching("/ws/13820-000/json"))
+            .willReturn(aResponse()
+                .withHeader("Content-Type", "text/plain")
+                .withBody("{  'cep': '13820-000',  "
+                            + "'logradouro': '',  "
+                            + "'complemento': '',  "
+                            + "'bairro': '',  "
+                            + "'localidade': 'Jaguariúna',  "
+                            + "'uf': 'SP',  'unidade': '',  "
+                            + "'ibge': '3524709',  "
+                            + "'gia': '3955'}")));
+        
         this.result = viaCep.buscarEndereco(cep);
+        
+        wireMockServer.stop();
+    }
+    
+    @When("^I consult the address for the zip code that does not exist (\\d{5}-\\d{3})$")
+    public void i_consult_the_address_for_the_zip_code_not_exist(String cep) {
+        WireMockServer wireMockServer = new WireMockServer();
+        wireMockServer.start();
+        wireMockServer.stubFor(get(urlMatching("/ws/00000-000/json"))
+            .willReturn(aResponse()
+                .withHeader("Content-Type", "text/plain")
+                .withBody("{ 'erro': true }")));
+        
+        this.result = viaCep.buscarEndereco(cep);
+        
+        wireMockServer.stop();
     }
     
     @Then("^I should see address (.+)$")

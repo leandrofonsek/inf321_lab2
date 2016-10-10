@@ -7,8 +7,8 @@ Scenario: Zip Code found
 	
 Scenario: Zip Code not found 
 	Given I can consult my address based on a zip code 
-	When I consult the address for the zip code 00000-000 
-	Then I should see message "erro": true 
+	When I consult the address for the zip code that does not exist 00000-000 
+	Then I should see message 'erro': true 
 	
 Scenario: ViaCep are out 
 	Given I can consult my address based on a zip code 
