@@ -11,19 +11,19 @@ Feature: ConsultaStatusEntrega
   Scenario: Track number found
      Given I can consult my order delivery status based on a track number 
      When I consult the delivery status for the track number 11111
-     Then I should see status "Entregue"
+     Then I should see OK message Objeto entregue ao destinatario
      
 	@caseid2
   Scenario: Track number not found
      Given I can consult my order delivery status based on a track number 
      When I consult the delivery status for a track number that does not exist 00000
-     Then I should see status "Objeto não localizado"
+     Then I should see not-OK message Objeto nao localizado
      
      @caseid3
   Scenario: Correios are out
      Given I can consult my order delivery status based on a track number 
      When Correios API is offline
-     Then I should see status "Servico indisponivel temporariamente"
+     Then I should see CORREIOS-Rastro status Servico indisponivel temporariamente
      
      
      
