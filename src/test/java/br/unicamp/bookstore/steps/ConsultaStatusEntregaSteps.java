@@ -43,7 +43,7 @@ public class ConsultaStatusEntregaSteps {
     public void i_consult_the_delivery_status_for_the_track_number(String objeto) {
         WireMockServer wireMockServer = new WireMockServer();
         wireMockServer.start();
-        wireMockServer.stubFor(get(urlMatching("/service/rastro/user=user,senha=passwd,tipo=L,resultado=T,lingua=101,objeto=" + objeto + "/json"))
+        wireMockServer.stubFor(get(urlMatching("/service/rastro/user=user,senha=passwd,tipo=L,resultado=T,lingua=101,objeto=11111/json"))
             .willReturn(aResponse()
                 .withHeader("Content-Type", "text/plain")    
                 .withBody("{  'versao': '2.0',  "

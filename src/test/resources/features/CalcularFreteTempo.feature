@@ -15,20 +15,20 @@ Feature: CalcularFreteTempo
 	
 	Examples: 
 		|Peso	|Largura|Altura	|Comprimento|TipoEntrega	|CEPOrigem	|CEPDestino	|Retorno					|
-		|1		|1		|1		|1			|SEDEX			|11111		|22222		|10,00;1					|
-		|1		|1		|1		|1			|SEDEX10		|11111		|22222		|10,00;1					|
+		|1		|1		|1		|1			|SED			|11111		|22222		|10,00;1					|
+		|1		|1		|1		|1			|S10			|11111		|22222		|10,00;1					|
 		|1		|1		|1		|1			|PAC			|11111		|22222		|10,00;1					|
-		|0		|1		|1		|1			|SEDEX			|11111		|22222		|Peso Invalido				|
-		|1		|0		|1		|1			|SEDEX10		|11111		|22222		|Laragura Invalida			|
+		|0		|1		|1		|1			|SED			|11111		|22222		|Peso Invalido				|
+		|1		|0		|1		|1			|S10			|11111		|22222		|Largura Invalida			|
 		|1		|1		|0		|1			|PAC			|11111		|22222		|Altura Invalida			|
-		|0		|1		|1		|0			|SEDEX			|11111		|22222		|Comprimento Invalido		|
-		|1		|1		|1		|1			|SEDEX10		|00000		|22222		|CEP origem invalido		|
+		|0		|1		|1		|0			|SED			|11111		|22222		|Comprimento Invalido		|
+		|1		|1		|1		|1			|S10			|00000		|22222		|CEP origem invalido		|
 		|1		|1		|1		|1			|PAC			|11111		|00000		|CEP destino invalido		|
-		|1		|1		|1		|1			|ShowMUEL		|11111		|22222		|Tipo de entrega invalido	|
+		|1		|1		|1		|1			|SML			|11111		|22222		|Tipo de entrega invalido	|
   
   @caseid2
  Scenario: Correios are out
      Given I can consult my order delivery status based on a track number 
      When Correios API is offline
-     Then I should see status "Servico indisponivel temporariamente"
+     Then I should see Correios API status Servico indisponivel temporariamente
      
