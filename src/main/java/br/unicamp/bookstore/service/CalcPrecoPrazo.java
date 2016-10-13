@@ -6,9 +6,21 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 
+import br.unicamp.bookstore.dao.DadosDeEntregaDAO;
+import br.unicamp.bookstore.model.PrecoPrazo;
+
+import com.google.gson.Gson;
+
 public class CalcPrecoPrazo {
     
     private String url;
+    public DadosDeEntregaDAO dao;
+
+    public CalcPrecoPrazo(String url, DadosDeEntregaDAO dao) {
+        super();
+        this.url = url;
+        this.dao = dao;
+    }
 
     public CalcPrecoPrazo() {
         url = "http://ws.correios.com.br/calculador/";
@@ -38,7 +50,15 @@ public class CalcPrecoPrazo {
         } catch (Exception e) {
             return "Servico indisponivel temporariamente";
         }
-
+        
+        PrecoPrazo precoPrazo = new Gson().fromJson(json, PrecoPrazo.class);
+        
+        if (precoPrazo.getErro().equals(0)) {
+            double valorFrete = Double.parseDouble(precoPrazo.getValor());
+            int diasEntrega = Integer.parseInt(precoPrazo.getPrazoEntrega());
+            dao.saveDadosDeEntrega(valorFrete, diasEntrega);            
+        }
+        
         return json;
     }
 

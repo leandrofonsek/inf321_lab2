@@ -6,9 +6,15 @@ import static com.github.tomakehurst.wiremock.client.WireMock.urlMatching;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.anyDouble;
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Mockito.times;
 
 import java.io.IOException;
 
+import org.mockito.Mockito;
+
+import br.unicamp.bookstore.dao.DadosDeEntregaDAO;
 import br.unicamp.bookstore.model.PrecoPrazo;
 import br.unicamp.bookstore.service.CalcPrecoPrazo;
 
@@ -16,6 +22,7 @@ import com.github.tomakehurst.wiremock.WireMockServer;
 import com.google.gson.Gson;
 
 import cucumber.api.java.Before;
+import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
@@ -26,21 +33,23 @@ public class CalcularFreteTempoSteps {
     
     private CalcPrecoPrazo calcPrecoPrazo;
     private String result;
+    private DadosDeEntregaDAO mock;
 
     
     @Before
     public void setUp() {
-        calcPrecoPrazo = new CalcPrecoPrazo(MOCK_URL);
+        mock = Mockito.mock(DadosDeEntregaDAO.class);
+        calcPrecoPrazo = new CalcPrecoPrazo(MOCK_URL,mock);
         result = null;
     }
     
     @Given("^I can consult the shipping cost and delivery time of a package to a address$")
-    public void i_can_consult_my_order_delivery_status() {
+    public void i_can_consult_the_shipping_cost_and_delivery_time_of_a_valid_package_to_a_valid_address() {
         assertNotNull(calcPrecoPrazo);
     }
     
-    @When("^I consult the shipping cost and delivery time for a package with dimensions (\\d{1}),(\\d{1}),(\\d{1}) and (\\d{1}), using delivery type (\\.{3}) from address (\\d{5})  to address (\\d{5})$")
-    public void i_consult_the_shipping_cost_and_delivery_time(String peso, String largura, String altura, String comprimento, String tipo, String origem, String destino) {
+    @When("^I consult the shipping cost and delivery time for a valid package with dimensions (\\d{1}),(\\d{1}),(\\d{1}) and (\\d{1}), using valid delivery type (\\.{3}) from valid address (\\d{5})  to valid address (\\d{5})$")
+    public void i_consult_the_shipping_cost_and_delivery_time_valid(String peso, String largura, String altura, String comprimento, String tipo, String origem, String destino) {
         WireMockServer wireMockServer = new WireMockServer();
         wireMockServer.start();
         wireMockServer.stubFor(get(urlMatching("/calculador/peso=1,largura=1,altura=1,comprimento=1,tipo=SED,cepOrigem=11111,cepDestino=22222/json"))
@@ -81,6 +90,27 @@ public class CalcularFreteTempoSteps {
                                 + "'entregaDomiciliar': 'S' ,  "
                                 + "'entregaSabado': 'S',  "
                                 + "'erro': '0'}")));
+        
+        this.result = calcPrecoPrazo.calculaPrecoPrazo(peso,largura,altura,comprimento,tipo,origem,destino);
+        
+        wireMockServer.stop();
+    }
+    
+    @Then("^ the valid result should be (.+)$")
+    public void the_valid_result_should_be(String result) throws IOException {
+        PrecoPrazo precoPrazo = new Gson().fromJson(this.result, PrecoPrazo.class);
+        assertEquals(result, precoPrazo.getMensagem());
+    }
+    
+    @And("^the result is saved on database$")
+    public void the_result_is_saved_on_database() {
+        Mockito.verify(mock, times(1)).saveDadosDeEntrega(anyDouble(),anyInt());
+    }
+    
+    @When("^I consult the shipping cost and delivery time for a invalid package with dimensions (\\d{1}),(\\d{1}),(\\d{1}) and (\\d{1}), using invalid delivery type (\\.{3}) from invalid address (\\d{5})  to invalid address (\\d{5})$")
+    public void i_consult_the_shipping_cost_and_delivery_time_invalid(String peso, String largura, String altura, String comprimento, String tipo, String origem, String destino) {
+        WireMockServer wireMockServer = new WireMockServer();
+        wireMockServer.start();
         
         wireMockServer.stubFor(get(urlMatching("/calculador/peso=0,largura=1,altura=1,comprimento=1,tipo=SED,cepOrigem=11111,cepDestino=22222/json"))
                 .willReturn(aResponse()
@@ -130,8 +160,8 @@ public class CalcularFreteTempoSteps {
         wireMockServer.stop();
     }
     
-    @Then("^ the result should be (.+)$")
-    public void the_result_should_be(String result) throws IOException {
+    @Then("^ the invalid result should be (.+)$")
+    public void the_invalid_result_should_be(String result) throws IOException {
         PrecoPrazo precoPrazo = new Gson().fromJson(this.result, PrecoPrazo.class);
         assertEquals(result, precoPrazo.getMensagem());
     }
