@@ -22,7 +22,7 @@ Feature: ConsultaStatusEntrega
      @caseid3
   Scenario: Correios are out
      Given I can consult my order delivery status based on a track number 
-     When Correios API is offline
+     When Correios is offline
      Then I should see CORREIOS-Rastro status Servico indisponivel temporariamente
      
      

@@ -81,7 +81,7 @@ public class ConsultaStatusEntregaSteps {
         wireMockServer.stop();
     }
     
-    @Then("^ I should see OK message (.+)$")
+    @Then("^I should see OK message (.+)$")
     public void i_should_see_ok_message(String result) throws IOException {
         StatusEntrega statusEntrega = new Gson().fromJson(this.result, StatusEntrega.class);
         assertEquals(result, statusEntrega.getDescricao());
@@ -92,13 +92,13 @@ public class ConsultaStatusEntregaSteps {
         assertTrue(this.result.contains(message));
     }
     
-    @When("^Correios are out$")
+    @When("^Correios is offline$")
     public void viaCep_API_is_offline() {
         rastro = new Rastro("http://taerrado");
         this.result = rastro.consultaStatusEntrega("");
     }
     
-    @Then("Then I should see CORREIOS-Rastro status (.+)$")
+    @Then("^I should see CORREIOS-Rastro status (.+)$")
     public void i_should_see_correios_rastro_status(String status) {
         assertTrue(this.result.contains(status));
     }

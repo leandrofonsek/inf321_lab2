@@ -96,7 +96,7 @@ public class CalcularFreteTempoSteps {
         wireMockServer.stop();
     }
     
-    @Then("^ the valid result should be (.+)$")
+    @Then("^the valid result should be (.+)$")
     public void the_valid_result_should_be(String result) throws IOException {
         PrecoPrazo precoPrazo = new Gson().fromJson(this.result, PrecoPrazo.class);
         assertEquals(result, precoPrazo.getMensagem());
@@ -160,7 +160,7 @@ public class CalcularFreteTempoSteps {
         wireMockServer.stop();
     }
     
-    @Then("^ the invalid result should be (.+)$")
+    @Then("^the invalid result should be (.+)$")
     public void the_invalid_result_should_be(String result) throws IOException {
         PrecoPrazo precoPrazo = new Gson().fromJson(this.result, PrecoPrazo.class);
         assertEquals(result, precoPrazo.getMensagem());
