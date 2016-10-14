@@ -14,7 +14,7 @@ import com.google.gson.Gson;
 public class CalcPrecoPrazo {
     
     private String url;
-    public DadosDeEntregaDAO dao;
+    private DadosDeEntregaDAO dao;
 
     public CalcPrecoPrazo(String url, DadosDeEntregaDAO dao) {
         super();
@@ -53,10 +53,11 @@ public class CalcPrecoPrazo {
         
         PrecoPrazo precoPrazo = new Gson().fromJson(json, PrecoPrazo.class);
         
-        if (precoPrazo.getErro().equals(0)) {
-            double valorFrete = Double.parseDouble(precoPrazo.getValor());
+        if (precoPrazo.getErro().equals("0")) {
+            System.out.println("Valor: " + precoPrazo.getValor());
+            double valorDoFrete = Double.parseDouble(precoPrazo.getValor());
             int diasEntrega = Integer.parseInt(precoPrazo.getPrazoEntrega());
-            dao.saveDadosDeEntrega(valorFrete, diasEntrega);            
+            dao.saveDadosDeEntrega(valorDoFrete, diasEntrega);            
         }
         
         return json;

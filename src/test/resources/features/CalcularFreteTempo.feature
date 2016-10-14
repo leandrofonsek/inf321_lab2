@@ -16,9 +16,9 @@ Feature: CalcularFreteTempo
 	
 	Examples: 
 		|Peso	|Largura|Altura	|Comprimento|TipoEntrega	|CEPOrigem	|CEPDestino	|Retorno					|
-		|1		|1		|1		|1			|SED			|11111		|22222		|10,00;1					|
-		|1		|1		|1		|1			|S10			|11111		|22222		|10,00;1					|
-		|1		|1		|1		|1			|PAC			|11111		|22222		|10,00;1					|
+		|1		|1		|1		|1			|SED			|11111		|22222		|10.00;1					|
+		|1		|1		|1		|1			|S10			|11111		|22222		|10.00;1					|
+		|1		|1		|1		|1			|PAC			|11111		|22222		|10.00;1					|
 		
   @caseid2 
   Scenario Outline: Calculate shipping cost and delivery time for invalid fields 
@@ -31,7 +31,7 @@ Feature: CalcularFreteTempo
 		|0		|1		|1		|1			|SED			|11111		|22222		|Peso Invalido				|
 		|1		|0		|1		|1			|S10			|11111		|22222		|Largura Invalida			|
 		|1		|1		|0		|1			|PAC			|11111		|22222		|Altura Invalida			|
-		|0		|1		|1		|0			|SED			|11111		|22222		|Comprimento Invalido		|
+		|1		|1		|1		|0			|SED			|11111		|22222		|Comprimento Invalido		|
 		|1		|1		|1		|1			|S10			|00000		|22222		|CEP origem invalido		|
 		|1		|1		|1		|1			|PAC			|11111		|00000		|CEP destino invalido		|
 		|1		|1		|1		|1			|SML			|11111		|22222		|Tipo de entrega invalido	|

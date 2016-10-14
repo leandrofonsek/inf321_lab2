@@ -48,7 +48,7 @@ public class CalcularFreteTempoSteps {
         assertNotNull(calcPrecoPrazo);
     }
     
-    @When("^I consult the shipping cost and delivery time for a valid package with dimensions (\\d{1}),(\\d{1}),(\\d{1}) and (\\d{1}), using valid delivery type (\\.{3}) from valid address (\\d{5})  to valid address (\\d{5})$")
+    @When("^I consult the shipping cost and delivery time for a valid package with dimensions (\\d{1}),(\\d{1}),(\\d{1}) and (\\d{1}), using valid delivery type (.{3}) from valid address (\\d{5})  to valid address (\\d{5})$")
     public void i_consult_the_shipping_cost_and_delivery_time_valid(String peso, String largura, String altura, String comprimento, String tipo, String origem, String destino) {
         WireMockServer wireMockServer = new WireMockServer();
         wireMockServer.start();
@@ -56,11 +56,11 @@ public class CalcularFreteTempoSteps {
             .willReturn(aResponse()
                 .withHeader("Content-Type", "text/plain")    
                 .withBody("{  'codigo': '40010',  "
-                            + "'valor': '10,00',  "
+                            + "'valor': '10.00',  "
                             + "'prazoEntrega': '1',  "
-                            + "'valorMaoPropria': '0,00',  "
-                            + "'valorAvisoRecebimento': '0,00',  "
-                            + "'valorDeclarado': '0,00',  "
+                            + "'valorMaoPropria': '0.00',  "
+                            + "'valorAvisoRecebimento': '0.00',  "
+                            + "'valorDeclarado': '0.00',  "
                             + "'entregaDomiciliar': 'S' ,  "
                             + "'entregaSabado': 'S',  "
                             + "'erro': '0'}")));
@@ -69,11 +69,11 @@ public class CalcularFreteTempoSteps {
                 .willReturn(aResponse()
                     .withHeader("Content-Type", "text/plain")    
                     .withBody("{  'codigo': '40215',  "
-                                + "'valor': '10,00',  "
+                                + "'valor': '10.00',  "
                                 + "'prazoEntrega': '1',  "
-                                + "'valorMaoPropria': '0,00',  "
-                                + "'valorAvisoRecebimento': '0,00',  "
-                                + "'valorDeclarado': '0,00',  "
+                                + "'valorMaoPropria': '0.00',  "
+                                + "'valorAvisoRecebimento': '0.00',  "
+                                + "'valorDeclarado': '0.00',  "
                                 + "'entregaDomiciliar': 'S' ,  "
                                 + "'entregaSabado': 'S',  "
                                 + "'erro': '0'}")));
@@ -82,11 +82,11 @@ public class CalcularFreteTempoSteps {
                 .willReturn(aResponse()
                     .withHeader("Content-Type", "text/plain")    
                     .withBody("{  'codigo': '41106',  "
-                                + "'valor': '10,00',  "
+                                + "'valor': '10.00',  "
                                 + "'prazoEntrega': '1',  "
-                                + "'valorMaoPropria': '0,00',  "
-                                + "'valorAvisoRecebimento': '0,00',  "
-                                + "'valorDeclarado': '0,00',  "
+                                + "'valorMaoPropria': '0.00',  "
+                                + "'valorAvisoRecebimento': '0.00',  "
+                                + "'valorDeclarado': '0.00',  "
                                 + "'entregaDomiciliar': 'S' ,  "
                                 + "'entregaSabado': 'S',  "
                                 + "'erro': '0'}")));
@@ -107,11 +107,10 @@ public class CalcularFreteTempoSteps {
         Mockito.verify(mock, times(1)).saveDadosDeEntrega(anyDouble(),anyInt());
     }
     
-    @When("^I consult the shipping cost and delivery time for a invalid package with dimensions (\\d{1}),(\\d{1}),(\\d{1}) and (\\d{1}), using invalid delivery type (\\.{3}) from invalid address (\\d{5})  to invalid address (\\d{5})$")
+    @When("^I consult the shipping cost and delivery time for a invalid package with dimensions (\\d{1}),(\\d{1}),(\\d{1}) and (\\d{1}), using invalid delivery type (.{3}) from invalid address (\\d{5})  to invalid address (\\d{5})$")
     public void i_consult_the_shipping_cost_and_delivery_time_invalid(String peso, String largura, String altura, String comprimento, String tipo, String origem, String destino) {
         WireMockServer wireMockServer = new WireMockServer();
         wireMockServer.start();
-        
         wireMockServer.stubFor(get(urlMatching("/calculador/peso=0,largura=1,altura=1,comprimento=1,tipo=SED,cepOrigem=11111,cepDestino=22222/json"))
                 .willReturn(aResponse()
                     .withHeader("Content-Type", "text/plain")    
